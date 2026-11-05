@@ -8,7 +8,7 @@ description: >-
   「原本ではどうなってた？」のように、組みや版面の話が出たら、組版という言葉が無くても使う。
   誤植や表記の点検だけなら校閲の担当へ。文章そのものの書き換えはしない。
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
   license: "MIT"
   language: "ja"
   default-mode: "advisor"
