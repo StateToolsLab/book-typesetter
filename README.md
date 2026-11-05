@@ -1,6 +1,6 @@
 # book-typesetter
 
-**v0.2.1**
+**v0.2.2**
 
 An Agent Skill that acts as the typesetter who finishes a Japanese book. It measures the page, compares it with the source, and solves layout problems without touching the author's words. You can ask in English: it is meant for anyone working on a Japanese book, including people who read little Japanese.
 
@@ -54,13 +54,13 @@ It never proposes rewriting the text to make a page fit.
 
 ## Where it works
 
-The skill is a set of instructions, not a typesetting tool. Your agent reads it, and your layout software does the setting.
+The skill is a set of instructions, not a typesetting tool. A person can apply these techniques by hand. The point of the skill is that an AI agent can measure the page, decide, and, where it can drive the layout software, apply the change itself.
 
 | Where | What it can do | Checked so far |
 |---|---|---|
-| DesignCraft | Measure, decide, and reset the page | Used on one real book |
-| InDesign | Measure a PDF and decide; you apply the fix with its settings | Not tested |
-| Word | Measure an exported PDF and decide; fine control over single lines is harder | Not tested |
+| DesignCraft | The agent measures, decides, and resets the page through the command line. It applies a character-spacing table to one paragraph; the software then works out the exact tightening | Used on one real book |
+| InDesign | Measure a PDF and decide. The same fix should be possible with its character-spacing settings (文字組みアキ量) | Not tested |
+| Word | Measure an exported PDF and decide. Single-line tightening is done with character spacing on each punctuation mark | Partly tried: Word opened a generated sample, but the result was not confirmed |
 | Fixed-layout EPUB | The same decisions as the print page | Not checked in readers |
 | Reflowable EPUB, the web | Out of scope: lines change with each reader's device | — |
 
@@ -98,7 +98,7 @@ book-typesetter is made by StateToolsLab with AI assistance. It was drafted with
 
 ## Status and verification
 
-Version 0.2.1 is an early draft. It comes from one A5 vertical-text book and was tried on two real layout questions, one of them also run without the skill. On that question the answer without the skill was also good; the skill added another option (expanding a line to absorb a short one), and its main value so far is a repeatable order and written-down techniques. One English question from a reader who knows little Japanese was also tried on the sample page: the answer found the cause, gave the calculation in English, and said what it could not check, though its predicted line break was not the one the software chose when the page was actually set. It has not yet been used through a whole book, and horizontal text, reflowable EPUB, and other typesetting software were not tested.
+Version 0.2.2 is an early draft. It comes from one A5 vertical-text book and was tried on two real layout questions, one of them also run without the skill. On that question the answer without the skill was also good; the skill added another option (expanding a line to absorb a short one), and its main value so far is a repeatable order and written-down techniques. One English question from a reader who knows little Japanese was also tried on the sample page: the answer found the cause, gave the calculation in English, and said what it could not check, though its predicted line break was not the one the software chose when the page was actually set. It has not yet been used through a whole book, and horizontal text, reflowable EPUB, and other typesetting software were not tested.
 
 ## License
 
@@ -154,13 +154,13 @@ Version 0.2.1 is an early draft. It comes from one A5 vertical-text book and was
 
 ## どこで使えるか
 
-このスキルは手順書で、組版の道具ではありません。AI が読んで判断し、組むのは手元のソフトです。
+このスキルは手順書で、組版の道具ではありません。同じ技は人の手でも当てられます。このスキルの狙いは、AI が頁を測って判断し、組版ソフトを動かせる環境なら、詰めるところまで AI が行えることです。
 
 | 使う場所 | できること | 確かめた範囲 |
 |---|---|---|
-| DesignCraft | 測る、判断する、組み直す | 実際の本 1 冊で使いました |
-| InDesign | PDF を測って判断する。直すのはソフトの設定で | 試していません |
-| Word | 書き出した PDF を測って判断する。1 行だけの細かい調整は難しくなります | 試していません |
+| DesignCraft | AI がコマンドで測り、判断し、組み直す。段落に文字組みの表を当てると、詰める量はソフトが計算する | 実際の本 1 冊で使いました |
+| InDesign | PDF を測って判断する。同じ直しは文字組みアキ量の設定でできるはずです | 試していません |
+| Word | 書き出した PDF を測って判断する。1 行だけ詰めるには、句読点ごとに字間を指定します | 一部だけ試しました。作ったサンプルは開けましたが、結果は確かめられていません |
 | 固定レイアウトの EPUB | 紙の頁と同じ判断 | 読書アプリでの表示は見ていません |
 | リフロー型の EPUB、Web | 対象外です。読者の端末で行が変わります | — |
 
@@ -180,7 +180,7 @@ StateToolsLab が AI の支援を受けて作りました。縦組の復刻本�
 
 ## 状態と検証
 
-0.2.1 は初期の下書きです。A5 縦組の本 1 冊から作り、実際の相談 2 件で試しました。そのうち 1 件はスキルなしでも試し、スキルなしでも答えはよいものでした。スキルで増えたのは別の案（行を広げて短い行を解く案）で、今のところの主な価値は、手順が毎回そろうことと、技が文書に残ることです。日本語の読めない人を想定した英語の相談も、サンプルの頁で 1 件試しました。原因を見つけ、計算を英語で示し、確かめていない所も書きました。ただ、予想した行の切れ目は、実際に組んだ切れ目とは違いました。本 1 冊を通して使った実績はまだありません。横組、リフロー型の EPUB、ほかの組版ソフトでは試していません。
+0.2.2 は初期の下書きです。A5 縦組の本 1 冊から作り、実際の相談 2 件で試しました。そのうち 1 件はスキルなしでも試し、スキルなしでも答えはよいものでした。スキルで増えたのは別の案（行を広げて短い行を解く案）で、今のところの主な価値は、手順が毎回そろうことと、技が文書に残ることです。日本語の読めない人を想定した英語の相談も、サンプルの頁で 1 件試しました。原因を見つけ、計算を英語で示し、確かめていない所も書きました。ただ、予想した行の切れ目は、実際に組んだ切れ目とは違いました。本 1 冊を通して使った実績はまだありません。横組、リフロー型の EPUB、ほかの組版ソフトでは試していません。
 
 ## ライセンス
 
