@@ -1,8 +1,8 @@
 # book-typesetter
 
-**v0.1.1**
+**v0.2.1**
 
-An Agent Skill that acts as the typesetter who finishes a Japanese book. It measures the page, compares it with the source, and solves layout problems without touching the author's words.
+An Agent Skill that acts as the typesetter who finishes a Japanese book. It measures the page, compares it with the source, and solves layout problems without touching the author's words. You can ask in English: it is meant for anyone working on a Japanese book, including people who read little Japanese.
 
 > Change no words. Absorb the problem with space.
 
@@ -25,6 +25,18 @@ An Agent Skill that acts as the typesetter who finishes a Japanese book. It meas
 
 More samples and the numbers are in [examples/](examples/).
 
+## Where this comes from
+
+In the days of metal type, a Japanese book was made by hand. One worker walked the racks and picked out each character. Another stood the characters in lines and set them into a page. A line rarely came out the right length on its own, so the compositor slipped small blanks of metal, called *komemono*, between the characters until the line locked tight.
+
+Readers never saw those blanks. A page that read easily was the only trace they left.
+
+Authors do not write with page breaks in mind. A paragraph may run two characters too long, or a heading may land on the last line of a page. The compositor did not ask the author to change the sentence. The problem was solved with metal and space, and the author's words stayed free.
+
+The metal is gone, and software now does most of this work. Software still leaves things behind, though. This skill began while resetting an old book, when a paragraph ended in a line of just two characters, 「る。」. It looked like something to live with. It was not. Three punctuation marks on the line before gave up a third of an em each, 3.27pt three times over, which made room for one more character. The stray line disappeared, and no reader will ever know it was there.
+
+That is the craft this skill tries to keep: measure, find the room that is already on the page, and leave the words alone.
+
 ## What it does
 
 The skill follows the same order every time:
@@ -40,6 +52,18 @@ The skill follows the same order every time:
 
 It never proposes rewriting the text to make a page fit.
 
+## Where it works
+
+The skill is a set of instructions, not a typesetting tool. Your agent reads it, and your layout software does the setting.
+
+| Where | What it can do | Checked so far |
+|---|---|---|
+| DesignCraft | Measure, decide, and reset the page | Used on one real book |
+| InDesign | Measure a PDF and decide; you apply the fix with its settings | Not tested |
+| Word | Measure an exported PDF and decide; fine control over single lines is harder | Not tested |
+| Fixed-layout EPUB | The same decisions as the print page | Not checked in readers |
+| Reflowable EPUB, the web | Out of scope: lines change with each reader's device | — |
+
 ## Getting started
 
 Copy this folder to your skills directory. For Claude Code:
@@ -48,18 +72,25 @@ Copy this folder to your skills directory. For Claude Code:
 git clone https://github.com/StateToolsLab/book-typesetter.git ~/.claude/skills/book-typesetter
 ```
 
-Then ask about the layout in your own words, for example 「この 1 字、詰められない？」 or 「この見出しの高さ、原本と比べて」. Measuring PDFs works best with poppler (`pdftotext`, `pdftoppm`, `pdffonts`).
+Then ask about the layout in your own words. The skill answers in your language, shows the characters from the page, and gives the Japanese term once, so you can talk to a printer or editor.
+
+- "Page 4 of this PDF ends with a line of just two characters. Can you tighten it?"
+- "Is this heading too low compared with the scan of the original?"
+- 「この 1 字、詰められない？」
+
+Measuring PDFs works best with poppler (`pdftotext`, `pdftoppm`, `pdffonts`).
 
 ```
 SKILL.md                      role, order of judgment, how to answer, what not to do
 references/techniques.md      techniques from lightest to heaviest, with formulas and numbers
 references/measuring.md       how to measure PDFs and scans
+references/glossary.md        Japanese typesetting terms in English
 references/tools-designcraft.md  example tools and settings for DesignCraft (scripts not included)
 tests/acceptance-cases.md     what a good answer looks like
 examples/                     the before-and-after sample
 ```
 
-The documents are written in Japanese.
+The skill's documents are written in Japanese, except the [glossary](references/glossary.md). Your agent reads them; you do not have to. For the underlying rules in English, see W3C's [Requirements for Japanese Text Layout](https://www.w3.org/TR/jlreq/).
 
 ## How this was built
 
@@ -67,7 +98,7 @@ book-typesetter is made by StateToolsLab with AI assistance. It was drafted with
 
 ## Status and verification
 
-Version 0.1.1 is an early draft. It comes from one A5 vertical-text book and was tried on two real layout questions, one of them also run without the skill. On that question the answer without the skill was also good; the skill added another option (expanding a line to absorb a short one), and its main value so far is a repeatable order and written-down techniques. It has not yet been used through a whole book, and horizontal text, reflowable EPUB, and other typesetting software were not tested.
+Version 0.2.1 is an early draft. It comes from one A5 vertical-text book and was tried on two real layout questions, one of them also run without the skill. On that question the answer without the skill was also good; the skill added another option (expanding a line to absorb a short one), and its main value so far is a repeatable order and written-down techniques. One English question from a reader who knows little Japanese was also tried on the sample page: the answer found the cause, gave the calculation in English, and said what it could not check, though its predicted line break was not the one the software chose when the page was actually set. It has not yet been used through a whole book, and horizontal text, reflowable EPUB, and other typesetting software were not tested.
 
 ## License
 
@@ -94,6 +125,18 @@ Version 0.1.1 is an early draft. It comes from one A5 vertical-text book and was
 
 詳しくは [examples/](examples/) を見てください。
 
+## このスキルの由来
+
+金属活字の時代、日本語の本は人の手で組まれていました。棚を歩いて字を 1 本ずつ拾う職人がいて、その字を行に並べて頁にする職人がいました。行はそのままではちょうどの長さにならないので、職人は字の間に「込め物」という小さな金属の片を差し込み、行がきっちり締まるまで整えました。
+
+読者が込め物を目にすることはありません。読みやすい頁だけが、その跡として残ります。
+
+作家は頁の切れ目を考えて書いているわけではありません。段落が 2 字だけ余ることも、見出しが頁の最後の行に来ることもあります。そんなとき、職人は作家に文を変えてくれとは言わず、金属と空きで解決しました。だから作家の言葉は自由でいられました。
+
+金属の片はなくなり、今はたいていの調整をソフトウェアがします。それでも、残るものはあります。このスキルは、古い本を組み直していたときに始まりました。ある段落の終わりが「る。」の 2 字だけの行になり、仕方がないように見えました。けれど前の行の句読点 3 つが 1/3 字ずつ（3.27pt ずつ）空きを譲ると、1 字分の余地ができて、短い行は消えました。読者がそれに気づくことはありません。
+
+測ること、頁の中にすでにある余地を見つけること、言葉には手を触れないこと。このスキルが受け継ごうとしているのは、その仕事です。
+
 ## 何をするか
 
 毎回、同じ順番で進めます。
@@ -109,6 +152,18 @@ Version 0.1.1 is an early draft. It comes from one A5 vertical-text book and was
 
 頁に収めるために文を書き換える案は出しません。
 
+## どこで使えるか
+
+このスキルは手順書で、組版の道具ではありません。AI が読んで判断し、組むのは手元のソフトです。
+
+| 使う場所 | できること | 確かめた範囲 |
+|---|---|---|
+| DesignCraft | 測る、判断する、組み直す | 実際の本 1 冊で使いました |
+| InDesign | PDF を測って判断する。直すのはソフトの設定で | 試していません |
+| Word | 書き出した PDF を測って判断する。1 行だけの細かい調整は難しくなります | 試していません |
+| 固定レイアウトの EPUB | 紙の頁と同じ判断 | 読書アプリでの表示は見ていません |
+| リフロー型の EPUB、Web | 対象外です。読者の端末で行が変わります | — |
+
 ## 使い方
 
 スキルのフォルダに置きます。Claude Code の場合:
@@ -117,7 +172,7 @@ Version 0.1.1 is an early draft. It comes from one A5 vertical-text book and was
 git clone https://github.com/StateToolsLab/book-typesetter.git ~/.claude/skills/book-typesetter
 ```
 
-あとは「この 1 字、詰められない？」「この見出しの高さ、原本と比べて」のように、ふだんの言葉で相談してください。PDF を測るには poppler（`pdftotext`、`pdftoppm`、`pdffonts`）があると進めやすくなります。
+あとは「この 1 字、詰められない？」「この見出しの高さ、原本と比べて」のように、ふだんの言葉で相談してください。英語でも相談できます。PDF を測るには poppler（`pdftotext`、`pdftoppm`、`pdffonts`）があると進めやすくなります。
 
 ## 作り方について
 
@@ -125,7 +180,7 @@ StateToolsLab が AI の支援を受けて作りました。縦組の復刻本�
 
 ## 状態と検証
 
-0.1.1 は初期の下書きです。A5 縦組の本 1 冊から作り、実際の相談 2 件で試しました。そのうち 1 件はスキルなしでも試し、スキルなしでも答えはよいものでした。スキルで増えたのは別の案（行を広げて短い行を解く案）で、今のところの主な価値は、手順が毎回そろうことと、技が文書に残ることです。本 1 冊を通して使った実績はまだありません。横組、リフロー型の EPUB、ほかの組版ソフトでは試していません。
+0.2.1 は初期の下書きです。A5 縦組の本 1 冊から作り、実際の相談 2 件で試しました。そのうち 1 件はスキルなしでも試し、スキルなしでも答えはよいものでした。スキルで増えたのは別の案（行を広げて短い行を解く案）で、今のところの主な価値は、手順が毎回そろうことと、技が文書に残ることです。日本語の読めない人を想定した英語の相談も、サンプルの頁で 1 件試しました。原因を見つけ、計算を英語で示し、確かめていない所も書きました。ただ、予想した行の切れ目は、実際に組んだ切れ目とは違いました。本 1 冊を通して使った実績はまだありません。横組、リフロー型の EPUB、ほかの組版ソフトでは試していません。
 
 ## ライセンス
 

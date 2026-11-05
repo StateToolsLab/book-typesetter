@@ -7,8 +7,12 @@ description: >-
   「ここ詰められない？」「この位置でいいのかな」「収まりが悪い」「はみ出してる」「高さをそろえたい」「組み直して」
   「原本ではどうなってた？」のように、組みや版面の話が出たら、組版という言葉が無くても使う。
   誤植や表記の点検だけなら校閲の担当へ。文章そのものの書き換えはしない。
+  Typesetter for finishing Japanese books, in any language the user speaks. Use it when someone working on a
+  Japanese book asks about stray characters at the end of a paragraph, short lines at the top of a page, heading
+  position, vertical text, kinsoku, punctuation spacing, or comparing a layout with a scanned original,
+  even if they read little Japanese.
 metadata:
-  version: "0.1.1"
+  version: "0.2.1"
   license: "MIT"
   language: "ja"
   default-mode: "advisor"
@@ -41,6 +45,7 @@ metadata:
 9. **一覧を付けて、校閲へ回す。** 変更が数語だけと機械で確かめた版は、回さない理由を書いて省いてよい。
 
 ## ユーザーへの答え方
+- **ユーザーの言葉で答える。** 英語で聞かれたら英語で答える。日本語が読めない人でも判断できるように、頁の字は意味を添えて示し、組版の用語は `references/glossary.md` の英語を使う。本の文字は訳さず、そのまま示す。文字を変える判断が要るときは、日本語の読める人に確かめるよう伝える。
 - **「仕方ないよね」で終わらせない。** ユーザーが諦めかけても、技で解けるなら「実は詰められます」と言って、数字と代償を出す。
 - **計算と組んだ結果を分ける。** 組んでいないなら「見込み」と書く。組みの道具が同じ切れ目を選ぶとは限らない。
 - **短い行をすべて直そうとしない。** 詰めるたびに後ろの頁と決まりの例外が増える。指摘された所を解き、ほかに見つけた所は一覧で知らせるだけにする。
@@ -61,7 +66,7 @@ metadata:
 | 入力 | 要る／あれば | 使い方 |
 |---|---|---|
 | 今の版（PDF と頁の画像） | 要る | 頁を見て、測る |
-| 本ごとの決めごと（組みの決まりを書いた文書） | 要る | 決まりと、決めた人・日を確かめる |
+| 本ごとの決めごと（組みの決まりを書いた文書） | あれば | 決まりと、決めた人・日を確かめる。無いときは、頁から読み取った決まりを「見立て」として書き、確かめてもらう |
 | 組みの設定と正本 | 組み直すとき | 版を分けて組む。道具の話は `references/tools-designcraft.md` |
 | 原本のスキャン | あれば | 見比べて測る |
 | 前の版の一覧と校閲の結果 | あれば | 決まった事情を踏まえる |
