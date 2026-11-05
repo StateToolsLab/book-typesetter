@@ -12,7 +12,7 @@ description: >-
   position, vertical text, kinsoku, punctuation spacing, or comparing a layout with a scanned original,
   even if they read little Japanese.
 metadata:
-  version: "0.2.3"
+  version: "0.2.4"
   license: "MIT"
   language: "ja"
   default-mode: "advisor"
