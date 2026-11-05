@@ -1,6 +1,6 @@
 # book-typesetter
 
-**v0.2.2**
+**v0.2.3**
 
 An Agent Skill that acts as the typesetter who finishes a Japanese book. It measures the page, compares it with the source, and solves layout problems without touching the author's words. You can ask in English: it is meant for anyone working on a Japanese book, including people who read little Japanese.
 
@@ -23,7 +23,7 @@ An Agent Skill that acts as the typesetter who finishes a Japanese book. It meas
 | 3 | The heading looks low because a full-width 〔 is empty in its upper half | The ink of 〔 lines up with the top of the quotation | Raise the box by half its size (0.55 em) |
 | 4 | Wrapped lines stick out one character above the numbered heads | Heads and wrapped lines start at the same height | Remove the first-line indent from numbered items |
 
-More samples and the numbers are in [examples/](examples/).
+The stray line in row 2 appeared with the settings used here (DesignCraft, full-width punctuation). In InDesign and Word the default settings fit the same line without it. More samples and the numbers are in [examples/](examples/).
 
 ## Where this comes from
 
@@ -59,8 +59,8 @@ The skill is a set of instructions, not a typesetting tool. A person can apply t
 | Where | What it can do | Checked so far |
 |---|---|---|
 | DesignCraft | The agent measures, decides, and resets the page through the command line. It applies a character-spacing table to one paragraph; the software then works out the exact tightening | Used on one real book |
-| InDesign | Measure a PDF and decide. The same fix should be possible with its character-spacing settings (文字組みアキ量) | Not tested |
-| Word | Measure an exported PDF and decide. Single-line tightening is done with character spacing on each punctuation mark | Partly tried: Word opened a generated sample, but the result was not confirmed |
+| InDesign | The agent can drive it by script (ExtendScript through AppleScript on a Mac), set the page, and export a PDF to measure | Tried on the sample with InDesign 2025. Spacing, heading, and numbered items worked. The stray line never appeared, because the default settings already fit 「る。」 on the line. Not used on a whole book |
+| Word | Measure an exported PDF and decide. Single-line tightening is done with character spacing on each punctuation mark | Partly tried: a generated sample opened in vertical text, and a person checked the screen. The stray line did not appear there either. The tightened version was not confirmed |
 | Fixed-layout EPUB | The same decisions as the print page | Not checked in readers |
 | Reflowable EPUB, the web | Out of scope: lines change with each reader's device | — |
 
@@ -98,7 +98,7 @@ book-typesetter is made by StateToolsLab with AI assistance. It was drafted with
 
 ## Status and verification
 
-Version 0.2.2 is an early draft. It comes from one A5 vertical-text book and was tried on two real layout questions, one of them also run without the skill. On that question the answer without the skill was also good; the skill added another option (expanding a line to absorb a short one), and its main value so far is a repeatable order and written-down techniques. One English question from a reader who knows little Japanese was also tried on the sample page: the answer found the cause, gave the calculation in English, and said what it could not check, though its predicted line break was not the one the software chose when the page was actually set. It has not yet been used through a whole book, and horizontal text, reflowable EPUB, and other typesetting software were not tested.
+Version 0.2.3 is an early draft. It comes from one A5 vertical-text book and was tried on two real layout questions, one of them also run without the skill. On that question the answer without the skill was also good; the skill added another option (expanding a line to absorb a short one), and its main value so far is a repeatable order and written-down techniques. One English question from a reader who knows little Japanese was also tried on the sample page: the answer found the cause, gave the calculation in English, and said what it could not check, though its predicted line break was not the one the software chose when the page was actually set. It has not yet been used through a whole book, and horizontal text, reflowable EPUB, and other typesetting software were not tested.
 
 ## License
 
@@ -123,7 +123,7 @@ Version 0.2.2 is an early draft. It comes from one A5 vertical-text book and was
 | 3 | 全角の「〔」は上半分が空くので、見出しが下がって見える | 「〔」の字の頭が引用の天にそろう | 箱を字の半分（0.55 字）上げる |
 | 4 | 番号の折り返しが 1 字上に出て、はみ出して見える | 番号の頭と折り返しが同じ高さ | 番号の項目の段落頭の下げを外す |
 
-詳しくは [examples/](examples/) を見てください。
+2 の「る。」の行は、ここで使った設定（DesignCraft、句読点は全角）で出たものです。InDesign と Word では、初期設定のままで同じ行に収まりました。詳しくは [examples/](examples/) を見てください。
 
 ## このスキルの由来
 
@@ -159,8 +159,8 @@ Version 0.2.2 is an early draft. It comes from one A5 vertical-text book and was
 | 使う場所 | できること | 確かめた範囲 |
 |---|---|---|
 | DesignCraft | AI がコマンドで測り、判断し、組み直す。段落に文字組みの表を当てると、詰める量はソフトが計算する | 実際の本 1 冊で使いました |
-| InDesign | PDF を測って判断する。同じ直しは文字組みアキ量の設定でできるはずです | 試していません |
-| Word | 書き出した PDF を測って判断する。1 行だけ詰めるには、句読点ごとに字間を指定します | 一部だけ試しました。作ったサンプルは開けましたが、結果は確かめられていません |
+| InDesign | AI がスクリプトで動かして組み、PDF に書き出して測る（Mac では AppleScript 経由の ExtendScript） | InDesign 2025 でサンプルを試しました。あき、見出し、番号の項目は効きました。「る。」の行は、初期設定のままで 1 行に収まって出ませんでした。本 1 冊では使っていません |
+| Word | 書き出した PDF を測って判断する。1 行だけ詰めるには、句読点ごとに字間を指定します | 一部だけ試しました。作ったサンプルは縦書きで開け、人が画面で確かめました。「る。」の行はここでも出ませんでした。詰めた版は確かめていません |
 | 固定レイアウトの EPUB | 紙の頁と同じ判断 | 読書アプリでの表示は見ていません |
 | リフロー型の EPUB、Web | 対象外です。読者の端末で行が変わります | — |
 
@@ -180,7 +180,7 @@ StateToolsLab が AI の支援を受けて作りました。縦組の復刻本�
 
 ## 状態と検証
 
-0.2.2 は初期の下書きです。A5 縦組の本 1 冊から作り、実際の相談 2 件で試しました。そのうち 1 件はスキルなしでも試し、スキルなしでも答えはよいものでした。スキルで増えたのは別の案（行を広げて短い行を解く案）で、今のところの主な価値は、手順が毎回そろうことと、技が文書に残ることです。日本語の読めない人を想定した英語の相談も、サンプルの頁で 1 件試しました。原因を見つけ、計算を英語で示し、確かめていない所も書きました。ただ、予想した行の切れ目は、実際に組んだ切れ目とは違いました。本 1 冊を通して使った実績はまだありません。横組、リフロー型の EPUB、ほかの組版ソフトでは試していません。
+0.2.3 は初期の下書きです。A5 縦組の本 1 冊から作り、実際の相談 2 件で試しました。そのうち 1 件はスキルなしでも試し、スキルなしでも答えはよいものでした。スキルで増えたのは別の案（行を広げて短い行を解く案）で、今のところの主な価値は、手順が毎回そろうことと、技が文書に残ることです。日本語の読めない人を想定した英語の相談も、サンプルの頁で 1 件試しました。原因を見つけ、計算を英語で示し、確かめていない所も書きました。ただ、予想した行の切れ目は、実際に組んだ切れ目とは違いました。本 1 冊を通して使った実績はまだありません。横組、リフロー型の EPUB、ほかの組版ソフトでは試していません。
 
 ## ライセンス
 
