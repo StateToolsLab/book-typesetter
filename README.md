@@ -1,6 +1,6 @@
 # book-typesetter
 
-**v0.2.4**
+**v0.3.0**
 
 An Agent Skill that acts as the typesetter who finishes a Japanese book. It measures the page, compares it with the source, and solves layout problems without touching the author's words. You can ask in English: it is meant for anyone working on a Japanese book, including people who read little Japanese.
 
@@ -39,7 +39,9 @@ That is the craft this skill tries to keep: measure, find the room that is alrea
 
 ## What it does
 
-The skill follows the same order every time:
+**Before a book is laid out,** if nothing is decided yet, the skill asks first: what you are making, how it will be used, the format, the size, the direction, and any source or sample. It asks one question at a time and recommends an answer when you do not know. A Word sample or a PDF can answer some of these. The answers become a one-page layout spec that you check before anything is set. Pouring in text and placing images are left to other steps and tools.
+
+**Once there is a page,** it follows the same order every time:
 
 1. Look at the finished page, not the settings.
 2. Measure character positions. Never quote a number by eye.
@@ -64,6 +66,23 @@ The skill is a set of instructions, not a typesetting tool. A person can apply t
 | Fixed-layout EPUB | The same decisions as the print page | Not checked in readers |
 | Reflowable EPUB, the web | Out of scope: lines change with each reader's device | — |
 
+## Related projects
+
+Other public skills work on layout too. They do different jobs, and the question that matters is how far each goes on its own: does it point out problems, or does it reach a fixed page?
+
+| Project | Main job | Japanese, vertical text | Questions before layout |
+|---|---|---|---|
+| [CJK Layout](https://github.com/sichengchen/cjk-layout-skills) | Implement and audit CJK text layout against W3C requirements | Yes, including vertical | No such step found |
+| [claude-typeset](https://github.com/nzeribe/claude-typeset) | Build a document by typographic rules and measure the PDF | Not mentioned | Not mentioned |
+| [book-typesetting-skill](https://github.com/yoelf22/book-typesetting-skill) | Produce press-ready files | Not mentioned | A list of decisions to make first |
+| [book-writing-skill](https://github.com/swiftugandan/book-writing-skill) | Turn source material into a book | Not mentioned | Not mentioned |
+| [ja-webtypo-skill](https://github.com/hanageruge/ja-webtypo-skill) | Japanese typography on the web | Japanese; vertical and print are out of scope | Not mentioned |
+| book-typesetter | Decide how a Japanese book is laid out, and finish it | Yes, mainly vertical | Yes, starting from the use |
+
+This is what the public READMEs said on 2026-11-07, and it is not a complete list. "Not mentioned" does not mean a project cannot do it. We ran only CJK Layout and book-typesetter. For standards-based implementation or multilanguage audits, CJK Layout is the better fit.
+
+We ran both on the same problems, and also without any skill. See the [report](evaluation/report.md) (in Japanese) and the [test toolkit](evaluation/toolkit/) to try the same thing with your own text. Each combination ran only once, so these are observations, not rankings.
+
 ## Getting started
 
 Copy this folder to your skills directory. For Claude Code:
@@ -77,6 +96,7 @@ Then ask about the layout in your own words. The skill answers in your language,
 - "Page 4 of this PDF ends with a line of just two characters. Can you tighten it?"
 - "Is this heading too low compared with the scan of the original?"
 - 「この 1 字、詰められない？」
+- "I want to turn this manuscript into a book, but I don't know how to ask for it."
 
 Measuring PDFs works best with poppler (`pdftotext`, `pdftoppm`, `pdffonts`).
 
@@ -85,9 +105,11 @@ SKILL.md                      role, order of judgment, how to answer, what not t
 references/techniques.md      techniques from lightest to heaviest, with formulas and numbers
 references/measuring.md       how to measure PDFs and scans
 references/glossary.md        Japanese typesetting terms in English
+references/intake.md          the questions asked before layout
 references/tools-designcraft.md  example tools and settings for DesignCraft (scripts not included)
 tests/acceptance-cases.md     what a good answer looks like
 examples/                     the before-and-after sample
+evaluation/                   the comparison report and a test toolkit
 ```
 
 The skill's documents are written in Japanese, except the [glossary](references/glossary.md). Your agent reads them; you do not have to. For the underlying rules in English, see W3C's [Requirements for Japanese Text Layout](https://www.w3.org/TR/jlreq/).
@@ -98,7 +120,9 @@ book-typesetter is made by StateToolsLab with AI assistance. It was drafted with
 
 ## Status and verification
 
-Version 0.2.4 is an early draft. It comes from one A5 vertical-text book and was tried on two real layout questions, one of them also run without the skill. On that question the answer without the skill was also good; the skill added another option (expanding a line to absorb a short one), and its main value so far is a repeatable order and written-down techniques. One English question from a reader who knows little Japanese was also tried on the sample page: the answer found the cause, gave the calculation in English, and said what it could not check, though its predicted line break was not the one the software chose when the page was actually set. It has not yet been used through a whole book, and horizontal text, reflowable EPUB, and other typesetting software were not tested.
+Version 0.3.0 is an early draft. In our trials, specific layout fixes were usually reached with or without a skill, so a skill made little visible difference there. Claude also reached a finished PDF with the free DesignCraft. With only a short request, trim size, line length, and page breaks changed from run to run. The questions before layout are new: we tried them once per condition with a scripted answerer whose answer sheet we wrote ourselves, which favors this skill, and they have not been tried with real users. They were written with books in mind; magazines, newspapers, and newsletters are untested. Details are in the [report](evaluation/report.md).
+
+The skill comes from one A5 vertical-text book and was tried on two real layout questions, one of them also run without the skill. On that question the answer without the skill was also good; the skill added another option (expanding a line to absorb a short one), and its main value so far is a repeatable order and written-down techniques. One English question from a reader who knows little Japanese was also tried on the sample page: the answer found the cause, gave the calculation in English, and said what it could not check, though its predicted line break was not the one the software chose when the page was actually set. It has not yet been used through a whole book. Horizontal text has been tried only on short test passages, and reflowable EPUB has not been tested.
 
 ## License
 
@@ -139,7 +163,9 @@ Version 0.2.4 is an early draft. It comes from one A5 vertical-text book and was
 
 ## 何をするか
 
-毎回、同じ順番で進めます。
+**組む前に、** 仕様が決まっていなければ、スキルから聞きます。何を作るか、どう使うか、形式、サイズ、組み方向、原本や見本の有無です。1 問ずつ聞き、分からなければおすすめを出します。Word の見本や PDF があれば、そこから読みます。答えは 1 枚の組みの仕様にまとめ、確かめてもらってから組みます。文字の流し込みや写真の取り込みは、別の工程や道具に任せます。
+
+**頁ができたら、** 毎回、同じ順番で進めます。
 
 1. 設定ではなく、出来上がった頁を見る。
 2. 字の位置を測る。目測で数字を言わない。
@@ -164,6 +190,23 @@ Version 0.2.4 is an early draft. It comes from one A5 vertical-text book and was
 | 固定レイアウトの EPUB | 紙の頁と同じ判断 | 読書アプリでの表示は見ていません |
 | リフロー型の EPUB、Web | 対象外です。読者の端末で行が変わります | — |
 
+## 関連するプロジェクト
+
+組みを扱う公開スキルは、ほかにもあります。それぞれ役割が違います。見ているのは勝ち負けではなく、指摘するだけか、直すところまで進めるかです。
+
+| プロジェクト | 主な役割 | 日本語、縦組 | 組む前の聞き取り |
+|---|---|---|---|
+| [CJK Layout](https://github.com/sichengchen/cjk-layout-skills) | W3C の要件に沿う CJK の組みの実装と点検 | あり（縦組も） | 手順は見当たらない |
+| [claude-typeset](https://github.com/nzeribe/claude-typeset) | 組版の規則で文書を作り、PDF を測る | 記載なし | 記載なし |
+| [book-typesetting-skill](https://github.com/yoelf22/book-typesetting-skill) | 入稿データを作る | 記載なし | 始める前に決めることの一覧 |
+| [book-writing-skill](https://github.com/swiftugandan/book-writing-skill) | 素材から本を作る | 記載なし | 記載なし |
+| [ja-webtypo-skill](https://github.com/hanageruge/ja-webtypo-skill) | 日本語の Web の文字組み | 日本語あり。縦組と印刷は対象外 | 記載なし |
+| book-typesetter | 日本語の本をどう組むかを決め、仕上げる | あり（縦組が主） | あり（用途から） |
+
+2026-11-07 に公開の README を読んだ範囲で、すべてを網羅したものではありません。「記載なし」は、できないという意味ではありません。動かしたのは CJK Layout と book-typesetter だけです。規格に沿った実装や多言語の点検なら、CJK Layout が合います。
+
+スキルなしも含めて、同じ問題で動かしました。[レポート](evaluation/report.md)と、手元の原稿で試せる[テスト用のツールキット](evaluation/toolkit/)を置いています。各組み合わせは 1 回ずつなので、順位ではなく、見えたことの記録です。
+
 ## 使い方
 
 スキルのフォルダに置きます。Claude Code の場合:
@@ -172,7 +215,7 @@ Version 0.2.4 is an early draft. It comes from one A5 vertical-text book and was
 git clone https://github.com/StateToolsLab/book-typesetter.git ~/.claude/skills/book-typesetter
 ```
 
-あとは「この 1 字、詰められない？」「この見出しの高さ、原本と比べて」のように、ふだんの言葉で相談してください。英語でも相談できます。PDF を測るには poppler（`pdftotext`、`pdftoppm`、`pdffonts`）があると進めやすくなります。
+あとは「この 1 字、詰められない？」「この見出しの高さ、原本と比べて」「この原稿を本にしたいけど、どう頼めばいいか分からない」のように、ふだんの言葉で相談してください。英語でも相談できます。PDF を測るには poppler（`pdftotext`、`pdftoppm`、`pdffonts`）があると進めやすくなります。
 
 ## 作り方について
 
@@ -180,7 +223,9 @@ StateToolsLab が AI の支援を受けて作りました。縦組の復刻本�
 
 ## 状態と検証
 
-0.2.4 は初期の下書きです。A5 縦組の本 1 冊から作り、実際の相談 2 件で試しました。そのうち 1 件はスキルなしでも試し、スキルなしでも答えはよいものでした。スキルで増えたのは別の案（行を広げて短い行を解く案）で、今のところの主な価値は、手順が毎回そろうことと、技が文書に残ることです。日本語の読めない人を想定した英語の相談も、サンプルの頁で 1 件試しました。原因を見つけ、計算を英語で示し、確かめていない所も書きました。ただ、予想した行の切れ目は、実際に組んだ切れ目とは違いました。本 1 冊を通して使った実績はまだありません。横組、リフロー型の EPUB、ほかの組版ソフトでは試していません。
+0.3.0 は初期の下書きです。試した範囲では、具体的な不具合直しはスキルの有無によらず届くことが多く、差はあまり見えませんでした。無料の DesignCraft でも、Claude は PDF まで届きました。短い依頼だけでは、判型、字詰め、頁の切れ目は回ごとに変わりました。組む前の聞き取りは新しい機能です。条件ごとに 1 回、答えの紙を使って試しただけで、紙は私たちが書いたのでこのスキルに有利です。実際の利用者では試していません。本を前提に書いており、雑誌、新聞、会報では試していません。詳しくは[レポート](evaluation/report.md)にあります。
+
+このスキルは A5 縦組の本 1 冊から作り、実際の相談 2 件で試しました。そのうち 1 件はスキルなしでも試し、スキルなしでも答えはよいものでした。スキルで増えたのは別の案（行を広げて短い行を解く案）で、今のところの主な価値は、手順が毎回そろうことと、技が文書に残ることです。日本語の読めない人を想定した英語の相談も、サンプルの頁で 1 件試しました。原因を見つけ、計算を英語で示し、確かめていない所も書きました。ただ、予想した行の切れ目は、実際に組んだ切れ目とは違いました。本 1 冊を通して使った実績はまだありません。横組は短い試しの文章だけで、リフロー型の EPUB は試していません。
 
 ## ライセンス
 

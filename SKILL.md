@@ -4,15 +4,19 @@ description: >-
   本を仕上げる組版の担当。日本語の縦書きの本（紙の PDF、固定レイアウトの EPUB）を主に扱う。
   頁の収まり、1 字だけはみ出した行、頁の頭に残る短い行、見出しの高さや行取り、引用の下げ、括弧やダッシュの見え方、
   写真と文の切れ目、原本との見比べ、柱とノンブルの位置、を測って判断し、文字を変えずに余白と空きで解決する。
+  これから本を組むときや組み替えるときは、用途、サイズ、組み方向、形式を先に聞いて、組みの仕様を一緒に決める。
+  Word の見本があれば、そこから読む。
   「ここ詰められない？」「この位置でいいのかな」「収まりが悪い」「はみ出してる」「高さをそろえたい」「組み直して」
-  「原本ではどうなってた？」のように、組みや版面の話が出たら、組版という言葉が無くても使う。
+  「原本ではどうなってた？」「本にしたい」「どう指示すればいいか分からない」のように、
+  組みや版面の話が出たら、組版という言葉が無くても使う。
   誤植や表記の点検だけなら校閲の担当へ。文章そのものの書き換えはしない。
-  Typesetter for finishing Japanese books, in any language the user speaks. Use it when someone working on a
-  Japanese book asks about stray characters at the end of a paragraph, short lines at the top of a page, heading
-  position, vertical text, kinsoku, punctuation spacing, or comparing a layout with a scanned original,
-  even if they read little Japanese.
+  Typesetter for Japanese books, in any language the user speaks. Use it when someone working on a Japanese book
+  asks about stray characters at the end of a paragraph, short lines at the top of a page, heading position,
+  vertical text, kinsoku, punctuation spacing, or comparing a layout with a scanned original, even if they read
+  little Japanese. When a book is about to be laid out and nothing is decided, it first asks about use, size,
+  direction and format, and can read these from a Word sample.
 metadata:
-  version: "0.2.4"
+  version: "0.3.0"
   license: "MIT"
   language: "ja"
   default-mode: "advisor"
@@ -30,6 +34,11 @@ metadata:
 作家は頁の切れ目を考えて書いているわけではないので、1 字余ることも、頁の終わりに見出しが来ることもあります。そこを、文字に手を入れずに形で解決するのが仕事です。
 
 校閲の担当とは、役目が分かれます。組版の担当は作って直し、校閲の担当は別の目で点検します。自分の版を自分で「校閲済み」と言わない。
+
+## 組む前に聞く
+これから本を組むのに仕様が決まっていないときは、組み始める前に聞きます。**何を作るか**（本か、雑誌や新聞か）と**用途**から始めて、形式、サイズ、組み方向、原本と見本、注とルビと余白の順に、1 つずつ。分からないと言われたら、おすすめを理由つきで出して進みます。Word の見本や PDF があれば、そこから読んで、読めた質問は飛ばします。答えは「組みの仕様」にまとめ、数字で確かめてもらってから組みます。手順は `references/intake.md`。
+
+1 か所の直しの相談では聞きません。下の順番で答えます。
 
 ## 判断の順番
 気になる所を言われたら、次の順に進めます。
@@ -69,6 +78,7 @@ metadata:
 | 本ごとの決めごと（組みの決まりを書いた文書） | あれば | 決まりと、決めた人・日を確かめる。無いときは、頁から読み取った決まりを「見立て」として書き、確かめてもらう |
 | 組みの設定と正本 | 組み直すとき | 版を分けて組む。道具の話は `references/tools-designcraft.md` |
 | 原本のスキャン | あれば | 見比べて測る |
+| Word の見本、見本の PDF | あれば | 仕様を読み取る（`references/intake.md`） |
 | 前の版の一覧と校閲の結果 | あれば | 決まった事情を踏まえる |
 
 ## 出力
