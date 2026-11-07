@@ -1,6 +1,6 @@
 # book-typesetter
 
-**v0.3.0**
+**v0.3.1**
 
 An Agent Skill that acts as the typesetter who finishes a Japanese book. It measures the page, compares it with the source, and solves layout problems without touching the author's words. You can ask in English: it is meant for anyone working on a Japanese book, including people who read little Japanese.
 
@@ -120,7 +120,7 @@ book-typesetter is made by StateToolsLab with AI assistance. It was drafted with
 
 ## Status and verification
 
-Version 0.3.0 is an early draft. In our trials, specific layout fixes were usually reached with or without a skill, so a skill made little visible difference there. Claude also reached a finished PDF with the free DesignCraft. With only a short request, trim size, line length, and page breaks changed from run to run. The questions before layout are new: we tried them once per condition with a scripted answerer whose answer sheet we wrote ourselves, which favors this skill, and they have not been tried with real users. They were written with books in mind; magazines, newspapers, and newsletters are untested. Details are in the [report](evaluation/report.md).
+Version 0.3.1 is an early draft. In our trials, specific layout fixes were usually reached with or without a skill, so a skill made little visible difference there. Claude also reached a finished PDF with the free DesignCraft. With only a short request, trim size, line length, and page breaks changed from run to run. The questions before layout are new: we tried them once per condition with a scripted answerer whose answer sheet we wrote ourselves, which favors this skill, and the author has tried them three times. On the first try, thirteen questions felt too many, and it was hard to tell how many were left, so 0.3.1 aims to show what remains and to stop at any time; the third try, in the ChatGPT desktop app, gave a count at each question and saved the spec to a file. They have not been tried with other users. They were written with books in mind; magazines, newspapers, and newsletters are untested. Details are in the [report](evaluation/report.md).
 
 The skill comes from one A5 vertical-text book and was tried on two real layout questions, one of them also run without the skill. On that question the answer without the skill was also good; the skill added another option (expanding a line to absorb a short one), and its main value so far is a repeatable order and written-down techniques. One English question from a reader who knows little Japanese was also tried on the sample page: the answer found the cause, gave the calculation in English, and said what it could not check, though its predicted line break was not the one the software chose when the page was actually set. It has not yet been used through a whole book. Horizontal text has been tried only on short test passages, and reflowable EPUB has not been tested.
 
@@ -223,7 +223,7 @@ StateToolsLab が AI の支援を受けて作りました。縦組の復刻本�
 
 ## 状態と検証
 
-0.3.0 は初期の下書きです。試した範囲では、具体的な不具合直しはスキルの有無によらず届くことが多く、差はあまり見えませんでした。無料の DesignCraft でも、Claude は PDF まで届きました。短い依頼だけでは、判型、字詰め、頁の切れ目は回ごとに変わりました。組む前の聞き取りは新しい機能です。条件ごとに 1 回、答えの紙を使って試しただけで、紙は私たちが書いたのでこのスキルに有利です。実際の利用者では試していません。本を前提に書いており、雑誌、新聞、会報では試していません。詳しくは[レポート](evaluation/report.md)にあります。
+0.3.1 は初期の下書きです。試した範囲では、具体的な不具合直しはスキルの有無によらず届くことが多く、差はあまり見えませんでした。無料の DesignCraft でも、Claude は PDF まで届きました。短い依頼だけでは、判型、字詰め、頁の切れ目は回ごとに変わりました。組む前の聞き取りは新しい機能です。条件ごとに 1 回、答えの紙を使って試しただけで、紙は私たちが書いたのでこのスキルに有利です。作者も 3 回試しました。1 回目は13 問は多く、残りが分からなかったので、0.3.1 で残りを見せ、いつでも止められるようにしました。ChatGPT のデスクトップで試した 3 回目では、質問のたびに「あと何問」が出て、仕様もファイルに残りました。ほかの利用者では試していません。本を前提に書いており、雑誌、新聞、会報では試していません。詳しくは[レポート](evaluation/report.md)にあります。
 
 このスキルは A5 縦組の本 1 冊から作り、実際の相談 2 件で試しました。そのうち 1 件はスキルなしでも試し、スキルなしでも答えはよいものでした。スキルで増えたのは別の案（行を広げて短い行を解く案）で、今のところの主な価値は、手順が毎回そろうことと、技が文書に残ることです。日本語の読めない人を想定した英語の相談も、サンプルの頁で 1 件試しました。原因を見つけ、計算を英語で示し、確かめていない所も書きました。ただ、予想した行の切れ目は、実際に組んだ切れ目とは違いました。本 1 冊を通して使った実績はまだありません。横組は短い試しの文章だけで、リフロー型の EPUB は試していません。
 
