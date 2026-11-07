@@ -63,7 +63,7 @@ The skill is a set of instructions, not a typesetting tool. A person can apply t
 | DesignCraft | The agent measures, decides, and resets the page through the command line. It applies a character-spacing table to one paragraph; the software then works out the exact tightening | Used on one real book |
 | InDesign | The agent can drive it by script (ExtendScript through AppleScript on a Mac), set the page, and export a PDF to measure | Tried on the sample with InDesign 2025. Spacing, heading, and numbered items worked. The stray line never appeared, because the default settings already fit 「る。」 on the line. Not used on a whole book |
 | Word | Decide whether to keep its automatic hanging punctuation. If not, tighten with character spacing on each punctuation mark | Tried on the sample, and a person checked the screen. By default the stray line did not appear. With hanging punctuation turned off it appeared, and tightening removed it. The agent could not read the PDF that Word exported on this Mac, so these results are by eye |
-| Fixed-layout EPUB | The same decisions as the print page | Not checked in readers |
+| Fixed-layout EPUB | The same decisions as the print page | A person opened a few trial chapters of one book in Kindle Previewer and checked that the file opens and that spreads look right. Not yet published to a store |
 | Reflowable EPUB, the web | Out of scope: lines change with each reader's device | — |
 
 ## Related projects
@@ -187,7 +187,7 @@ The skill comes from one A5 vertical-text book and was tried on two real layout 
 | DesignCraft | AI がコマンドで測り、判断し、組み直す。段落に文字組みの表を当てると、詰める量はソフトが計算する | 実際の本 1 冊で使いました |
 | InDesign | AI がスクリプトで動かして組み、PDF に書き出して測る（Mac では AppleScript 経由の ExtendScript） | InDesign 2025 でサンプルを試しました。あき、見出し、番号の項目は効きました。「る。」の行は、初期設定のままで 1 行に収まって出ませんでした。本 1 冊では使っていません |
 | Word | 自動のぶら下げを残すか判断する。残さないなら、句読点ごとに字間を指定して詰める | サンプルで試し、人が画面で確かめました。初期設定では「る。」の行は出ず、ぶら下げを切ると出て、詰めると消えました。この Mac では Word が書き出した PDF を AI が読めなかったので、結果は目視です |
-| 固定レイアウトの EPUB | 紙の頁と同じ判断 | 読書アプリでの表示は見ていません |
+| 固定レイアウトの EPUB | 紙の頁と同じ判断 | 1 冊の試しの数章を、人が Kindle Previewer で開き、開けることと見開きを確かめました。ストアへの入稿はまだです |
 | リフロー型の EPUB、Web | 対象外です。読者の端末で行が変わります | — |
 
 ## 関連するプロジェクト
