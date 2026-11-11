@@ -106,6 +106,7 @@ references/techniques.md      techniques from lightest to heaviest, with formula
 references/measuring.md       how to measure PDFs and scans
 references/glossary.md        Japanese typesetting terms in English
 references/intake.md          the questions asked before layout
+references/punctuation-widths.md  the per-book JSON for punctuation widths
 references/tools-designcraft.md  example tools and settings for DesignCraft (scripts not included)
 tests/acceptance-cases.md     what a good answer looks like
 examples/                     the before-and-after sample
