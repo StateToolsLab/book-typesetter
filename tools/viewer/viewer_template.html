@@ -1,0 +1,61 @@
+<title>/*TITLE*/</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* 頁を読むだけの案内板: 紙の白が映えるよう、地は藍に寄せた灰。頁を上から順に並べ、場所を言うためのガイド線を重ねる */
+:root { --bg:#e6e8ec; --fg:#252a33; --sub:#59606d; --paper:#fff; --line:#c6cad2; --red:#d1352b; --blue:#2463d8 }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#23262c; --fg:#e8eaee; --sub:#a7adb8; --line:#3b3f47; color-scheme:dark } }
+:root[data-theme="dark"] { --bg:#23262c; --fg:#e8eaee; --sub:#a7adb8; --line:#3b3f47; color-scheme:dark }
+body { background:var(--bg); color:var(--fg); font-family:"Hiragino Mincho ProN","Yu Mincho",serif; padding-block:16px 40px; padding-left:max(16px,env(safe-area-inset-left,0px)); padding-right:max(16px,env(safe-area-inset-right,0px)) }
+main { max-width:640px; margin:0 auto; display:grid; gap:20px }
+h1 { font-size:20px; margin:0 }
+p { margin:4px 0 0; font-size:14px; color:var(--sub); font-family:system-ui,sans-serif; line-height:1.6 }
+.key { display:inline-block; width:18px; height:0; border-top:2px solid; vertical-align:middle; margin-right:4px }
+label { display:inline-flex; gap:6px; align-items:center; font:14px system-ui,sans-serif; margin-top:8px; cursor:pointer }
+figure { margin:0; display:grid; gap:4px }
+.pg { position:relative; max-width:100% }
+.pg img { display:block; width:100%; height:100%; background:var(--paper); border:1px solid var(--line); box-sizing:border-box }
+.pg svg { position:absolute; inset:0; width:100%; height:100%; pointer-events:none }
+body.noguide .pg svg { display:none }
+figcaption { font:12px system-ui,sans-serif; color:var(--sub); text-align:right; font-variant-numeric:tabular-nums }
+</style>
+<main id="m">
+<header><h1 id="h"></h1>
+<p id="note"></p>
+<p><span class="key" style="color:var(--red)"></span>赤い縦線: 右から <span class="el"></span> 行ごと（上の数字が行）。<span class="key" style="color:var(--blue)"></span>青い横線: 天から <span class="ec"></span> 字ごと（右の数字が字）。行の上の灰色の小さな数字は、その行の字数（縦中横の数字は 1 字）。場所は「何頁、何〜何行の間、何〜何字あたり」のように言ってください。字間を詰めた段落では、青い線と字が少しずれます。</p>
+<label><input type="checkbox" id="g" checked> ガイド線を出す</label>
+</header>
+</main>
+<script>
+// update_viewer.py が版面の値・頁・字数を入れる（本ごとの 版面.json から）
+var CFG=/*CFG*/null;
+var W=CFG.W,H=CFG.H,X1=CFG.X1,LEAD=CFG.LEAD,FS=CFG.FS,TOP=CFG.TOP,NL=CFG.NL,NC=CFG.NC;
+document.getElementById('h').textContent=CFG.title;
+document.getElementById('note').textContent=CFG.note;
+document.querySelector('.el').textContent=CFG.everyLine;
+document.querySelector('.ec').textContent=CFG.everyChar;
+function guides(pi){
+  var s='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">';
+  var bot=TOP+NC*FS, left=X1-(NL-1)*LEAD, right=X1+FS;
+  for(var k=CFG.everyLine;k<NL;k+=CFG.everyLine){var x=X1+FS+(LEAD-FS)/2-LEAD*k;
+    s+='<line x1="'+x+'" y1="'+(TOP-6)+'" x2="'+x+'" y2="'+(bot+4)+'" stroke="#d1352b" stroke-width="0.7" opacity="0.75"/>';
+    s+='<text x="'+x+'" y="'+(TOP-14)+'" font-size="9" text-anchor="middle" fill="#d1352b" font-family="sans-serif">'+k+'</text>';}
+  for(var n=CFG.everyChar;n<NC;n+=CFG.everyChar){var y=TOP+FS*n;
+    s+='<line x1="'+(left-4)+'" y1="'+y+'" x2="'+(right+4)+'" y2="'+y+'" stroke="#2463d8" stroke-width="0.5" opacity="0.6"/>';
+    s+='<text x="'+(right+7)+'" y="'+(y+3)+'" font-size="8" fill="#2463d8" font-family="sans-serif">'+n+'</text>';}
+  var cn=CFG.counts[pi]||[];for(var j=0;j<NL;j++){if(!cn[j])continue;var cx=X1+FS/2-LEAD*j;
+    s+='<text x="'+cx+'" y="'+(TOP-3)+'" font-size="6.5" text-anchor="middle" fill="#59606d" font-family="sans-serif">'+cn[j]+'</text>';}
+  return s+'</svg>';
+}
+var m=document.getElementById('m');
+CFG.pages.forEach(function(pg,i){
+  var f=document.createElement('figure'),d=document.createElement('div'),c=document.createElement('figcaption'),im=document.createElement('img');
+  d.className='pg';d.style.aspectRatio=W+'/'+H;
+  im.src=pg.img;im.alt=pg.label;im.loading=i<3?'eager':'lazy';
+  d.appendChild(im);d.insertAdjacentHTML('beforeend',guides(i));
+  c.textContent=pg.label;
+  f.appendChild(d);f.appendChild(c);m.appendChild(f);
+});
+var cb=document.getElementById('g');
+try{ if(localStorage.getItem('noguide')==='1'){cb.checked=false;document.body.classList.add('noguide');} }catch(e){}
+cb.addEventListener('change',function(){document.body.classList.toggle('noguide',!cb.checked);try{localStorage.setItem('noguide',cb.checked?'0':'1');}catch(e){}});
+</script>

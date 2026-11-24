@@ -98,7 +98,7 @@ Then ask about the layout in your own words. The skill answers in your language,
 - 「この 1 字、詰められない？」
 - "I want to turn this manuscript into a book, but I don't know how to ask for it."
 
-Measuring PDFs works best with poppler (`pdftotext`, `pdftoppm`, `pdffonts`).
+Measuring PDFs works best with poppler (`pdftotext`, `pdftoppm`, `pdffonts`). The page viewer in `tools/viewer/` also needs poppler (`pdfinfo`) and Python 3.
 
 ```
 SKILL.md                      role, order of judgment, how to answer, what not to do
@@ -107,7 +107,9 @@ references/measuring.md       how to measure PDFs and scans
 references/glossary.md        Japanese typesetting terms in English
 references/intake.md          the questions asked before layout
 references/punctuation-widths.md  the per-book JSON for punctuation widths
+references/review-guides.md   guide lines laid over page images, so people can point to a place
 references/tools-designcraft.md  example tools and settings for DesignCraft (scripts not included)
+tools/viewer/                 builds the page viewer with guide lines from a typeset PDF (vertical text)
 tests/acceptance-cases.md     what a good answer looks like
 examples/                     the before-and-after sample
 evaluation/                   the comparison report and a test toolkit
