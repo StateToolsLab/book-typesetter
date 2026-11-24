@@ -9,6 +9,9 @@ DesignCraft CLI で 1 章を組むときに使った道具の例です。スク�
 | `merge_fixed_epub.py` | 固定レイアウトの EPUB にまとめる |
 | `grid_check.py PDF 行送り 字の大きさ` | 本文の行が格子に乗っているかを見る |
 | `ink_columns.py`・`ink_pitch.py` | 画像のインクの位置を測る |
+| `min_comma_half.py 設定.json 段落 …` | 半角にする読点の、最少の組み合わせを組んで探す。まず 1 個ずつ全部、次に 2 個…の順（`techniques.md` の「最適化として解く」） |
+| `loose_lines.py PDF 最初のノンブル [頁,…]` | 行の中で字間が広がった所を、文字の層で測って拾う |
+| `short_page_end.py PDF 最初のノンブル` | 頁の最後の行が地まで届かない頁を拾う（下の注意） |
 
 ## よく使う設定
 | 設定 | 使い道 |
