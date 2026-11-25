@@ -16,7 +16,7 @@ description: >-
   little Japanese. When a book is about to be laid out and nothing is decided, it first asks about use, size,
   direction and format, and can read these from a Word sample.
 metadata:
-  version: "0.3.7"
+  version: "0.3.8"
   license: "MIT"
   language: "ja"
   default-mode: "advisor"

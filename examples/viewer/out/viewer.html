@@ -33,7 +33,7 @@ body.spread main { max-width:1180px }
 </main>
 <script>
 // update_viewer.py が版面の値・頁・字数を入れる（本ごとの 版面.json から）
-var CFG={"W": 420.0, "H": 594.96, "X1": 330.9, "LEAD": 18.0, "FS": 10.0, "TOP": 97.64, "NL": 15, "NC": 40, "everyLine": 5, "everyChar": 5, "title": "町の製本所（見本）", "note": "2 頁（1 頁〜2 頁）。上から順に頁が並びます。「見開きで見る」で 2 頁ずつ並べられます。指で広げると拡大できます。", "counts": [[0, 8, 39, 40, 26, 39, 40, 22, 39, 39, 40, 7, 39, 40, 0], [40, 25, 39, 39, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], "binding": "右", "pages": [{"img": "p/p-1.jpg", "label": "1 頁", "no": 1}, {"img": "p/p-2.jpg", "label": "2 頁", "no": 2}]};
+var CFG={"W": 420.0, "H": 594.96, "X1": 330.9, "LEAD": 18.0, "FS": 10.0, "TOP": 97.64, "NL": 15, "NC": 40, "everyLine": 5, "everyChar": 5, "title": "町の製本所（見本）", "note": "2 頁（2 頁〜3 頁）。上から順に頁が並びます。「見開きで見る」で 2 頁ずつ並べられます。指で広げると拡大できます。", "counts": [[0, 8, 39, 40, 26, 39, 40, 22, 39, 39, 40, 7, 39, 40, 0], [40, 25, 39, 39, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], "binding": "右", "pages": [{"img": "p/p-1.jpg", "label": "2 頁", "no": 2}, {"img": "p/p-2.jpg", "label": "3 頁", "no": 3}]};
 var W=CFG.W,H=CFG.H,X1=CFG.X1,LEAD=CFG.LEAD,FS=CFG.FS,TOP=CFG.TOP,NL=CFG.NL,NC=CFG.NC;
 document.getElementById('h').textContent=CFG.title;
 document.getElementById('note').textContent=CFG.note;
