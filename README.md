@@ -1,6 +1,6 @@
 # book-typesetter
 
-**v0.3.1**
+**v0.3.6**
 
 An Agent Skill that acts as the typesetter who finishes a Japanese book. It measures the page, compares it with the source, and solves layout problems without touching the author's words. You can ask in English: it is meant for anyone working on a Japanese book, including people who read little Japanese.
 
@@ -24,6 +24,16 @@ An Agent Skill that acts as the typesetter who finishes a Japanese book. It meas
 | 4 | Wrapped lines stick out one character above the numbered heads | Heads and wrapped lines start at the same height | Remove the first-line indent from numbered items |
 
 The stray line in row 2 appeared with the settings used here (DesignCraft, full-width punctuation). In InDesign and Word the default settings fit the same line without it; Word appears to do so by hanging punctuation, and the stray line returned when that was turned off. More samples and the numbers are in [examples/](examples/).
+
+## Page viewer with guide lines
+
+![A sample page in the viewer, with red lines every five lines, blue lines every five characters, and the character count above each line](examples/viewer/viewer.png)
+
+*A fictional sample written for this repository, typeset in A5 vertical text and shown in the viewer.*
+
+"Line 12, about the 20th character" is hard to count by eye, especially on a phone. The viewer lays guide lines over the page images: a red line every five lines from the right, a blue line every five characters from the top, and the number of characters in each line. The reader names a place by the lines, and the typesetter finds it without guessing. A tightened line shows up as a line with more characters.
+
+`tools/viewer/update_viewer.py` builds the viewer from a typeset PDF, along with a light PDF for phones. The type area of each book (where the first line starts, line pitch, character size, top margin, lines and characters) comes from a small per-book JSON measured from the PDF, not from the tool. Republish the viewer to the same place for each version, so the reader always opens the latest pages from the same link. It handles vertical text only for now. See [examples/viewer/](examples/viewer/) and [the guide](references/review-guides.md) (in Japanese).
 
 ## Where this comes from
 
@@ -53,6 +63,15 @@ That is the craft this skill tries to keep: measure, find the room that is alrea
 8. Compare with the previous version mechanically, then hand over to a separate proofreader.
 
 It never proposes rewriting the text to make a page fit.
+
+**People and the typesetter share the work.** Finding the best fit among many combinations is a problem with an answer, and an AI is good at it. A person looks at the page, says what looks wrong, and decides what good means. The typesetter measures, tries the combinations, and returns the best one. Left alone, it tends to stop at "it fits and follows the rules", so the reader's eye is the starting point.
+
+Added since 0.3.1, from continuing to reset the same book:
+
+- **Guide lines and a page viewer** (0.3.2, 0.3.4), above.
+- **Per-book punctuation widths** (0.3.3): each book records only its basic widths (for example, commas full width, parentheses half width) in a small JSON. Tightening for one paragraph is an exception added on top, never a change to the base.
+- **An order for tightening** (0.3.5): first make the fewest commas half width on the line that overflows, then take a third of an em, and only then tighten the whole paragraph. Tighten only the lines that need it.
+- **Tightening as an optimization problem** (0.3.5): measure the line, set the goal and the limits (no overflow, the next page starts the same, no line of one character and a period), try each candidate alone before trying pairs, split a large cut across nearby punctuation, and compare each version with the last.
 
 ## Where it works
 
@@ -112,6 +131,7 @@ references/tools-designcraft.md  example tools and settings for DesignCraft (scr
 tools/viewer/                 builds the page viewer with guide lines from a typeset PDF (vertical text)
 tests/acceptance-cases.md     what a good answer looks like
 examples/                     the before-and-after sample
+examples/viewer/              the viewer sample: source, PDF, per-book JSON, and the built viewer
 evaluation/                   the comparison report and a test toolkit
 ```
 
@@ -123,7 +143,7 @@ book-typesetter is made by StateToolsLab with AI assistance. It was drafted with
 
 ## Status and verification
 
-Version 0.3.1 is an early draft. In our trials, specific layout fixes were usually reached with or without a skill, so a skill made little visible difference there. Claude also reached a finished PDF with the free DesignCraft. With only a short request, trim size, line length, and page breaks changed from run to run. The questions before layout are new: we tried them once per condition with a scripted answerer whose answer sheet we wrote ourselves, which favors this skill, and the author has tried them three times. On the first try, thirteen questions felt too many, and it was hard to tell how many were left, so 0.3.1 aims to show what remains and to stop at any time; the third try, in the ChatGPT desktop app, gave a count at each question and saved the spec to a file. They have not been tried with other users. They were written with books in mind; magazines, newspapers, and newsletters are untested. Details are in the [report](evaluation/report.md).
+This is an early draft. Versions 0.3.2 to 0.3.6 come from continuing to reset the same book: a person checked every version page by page in the viewer, and the punctuation rules and the tightening steps were worked out on its pages. They have not been tried on another book. The trials below were run on 0.3.1. In our trials, specific layout fixes were usually reached with or without a skill, so a skill made little visible difference there. Claude also reached a finished PDF with the free DesignCraft. With only a short request, trim size, line length, and page breaks changed from run to run. The questions before layout are new: we tried them once per condition with a scripted answerer whose answer sheet we wrote ourselves, which favors this skill, and the author has tried them three times. On the first try, thirteen questions felt too many, and it was hard to tell how many were left, so 0.3.1 aims to show what remains and to stop at any time; the third try, in the ChatGPT desktop app, gave a count at each question and saved the spec to a file. They have not been tried with other users. They were written with books in mind; magazines, newspapers, and newsletters are untested. Details are in the [report](evaluation/report.md).
 
 The skill comes from one A5 vertical-text book and was tried on two real layout questions, one of them also run without the skill. On that question the answer without the skill was also good; the skill added another option (expanding a line to absorb a short one), and its main value so far is a repeatable order and written-down techniques. One English question from a reader who knows little Japanese was also tried on the sample page: the answer found the cause, gave the calculation in English, and said what it could not check, though its predicted line break was not the one the software chose when the page was actually set. It has not yet been used through a whole book. Horizontal text has been tried only on short test passages, and reflowable EPUB has not been tested.
 
@@ -151,6 +171,14 @@ The skill comes from one A5 vertical-text book and was tried on two real layout 
 | 4 | 番号の折り返しが 1 字上に出て、はみ出して見える | 番号の頭と折り返しが同じ高さ | 番号の項目の段落頭の下げを外す |
 
 2 の「る。」の行は、ここで使った設定（DesignCraft、句読点は全角）で出たものです。InDesign と Word では、初期設定のままで同じ行に収まりました。Word はぶら下げで収めているようで、切ると「る。」の行が出ました。詳しくは [examples/](examples/) を見てください。
+
+## ガイド線つきの見る頁
+
+上の「Page viewer with guide lines」の画像が、見る頁の見本です。このリポジトリのために書いた架空の文章を A5 縦組で組み、見る頁に出しました。
+
+「12 行目の 20 字目あたり」は、目では数えにくく、スマホではなおさらです。見る頁は、頁の画像の上に、右から 5 行ごとの赤い線、天から 5 字ごとの青い線、行ごとの字数を重ねます。見る人は線を頼りに場所を言い、組版の担当は迷わずその場所を見つけます。詰めた行は、字数が多い行として分かります。
+
+`tools/viewer/update_viewer.py` が、組んだ版の PDF から見る頁と、スマホ用の軽い PDF を作ります。本ごとの版面の値（1 行目の位置、行送り、字の大きさ、天、行数、字数）は、道具に書かず、PDF を測って本ごとの小さな JSON に書きます。版を出すたびに同じ場所へ出し直すと、見る人はいつも同じリンクで最新の頁を開けます。いまは縦組だけです。[examples/viewer/](examples/viewer/) と[手引き](references/review-guides.md)を見てください。
 
 ## このスキルの由来
 
@@ -180,6 +208,15 @@ The skill comes from one A5 vertical-text book and was tried on two real layout 
 8. 前の版と機械で比べ、別の担当の校閲へ回す。
 
 頁に収めるために文を書き換える案は出しません。
+
+**人と担当で分担します。** たくさんの組み合わせから収まる最適の形を探すのは、答えのある問題で、AI の得意なところです。人は頁を見て「ここが変」と言い、何を「良い」とするかを決めます。担当は測って、組み合わせを試し、いちばんよい形を出します。担当だけだと「収まって決まりに合う」で止まりやすいので、見る人の目を起点にします。
+
+0.3.1 のあと、同じ本の組み直しを続けて足したもの:
+
+- **ガイド線と見る頁**（0.3.2、0.3.4）。上のとおりです。
+- **本ごとの約物の決まり**（0.3.3）。句読点は全角、丸かっこは半角、のような基本の幅だけを本ごとの小さな JSON に残します。1 段落のための詰めは、その上に足す例外で、基本は変えません。
+- **詰めの順**（0.3.5）。まず、あふれる行の読点を最少の数だけ半角にし、次に 1/3 字の詰め、それでも足りないときだけ段落の字間を詰めます。詰めるのは要る行だけです。
+- **詰めを最適化として解く**（0.3.5）。行を測り、目的と制約（あふれない、次の頁の頭が変わらない、1 字＋句点の行を作らない）を決め、候補を 1 個ずつ全部試してから 2 個の組みへ進み、大きく削る所は近くの句読点に分け、版ごとに前の版と比べます。
 
 ## どこで使えるか
 
@@ -218,7 +255,7 @@ The skill comes from one A5 vertical-text book and was tried on two real layout 
 git clone https://github.com/StateToolsLab/book-typesetter.git ~/.claude/skills/book-typesetter
 ```
 
-あとは「この 1 字、詰められない？」「この見出しの高さ、原本と比べて」「この原稿を本にしたいけど、どう頼めばいいか分からない」のように、ふだんの言葉で相談してください。英語でも相談できます。PDF を測るには poppler（`pdftotext`、`pdftoppm`、`pdffonts`）があると進めやすくなります。
+あとは「この 1 字、詰められない？」「この見出しの高さ、原本と比べて」「この原稿を本にしたいけど、どう頼めばいいか分からない」のように、ふだんの言葉で相談してください。英語でも相談できます。PDF を測るには poppler（`pdftotext`、`pdftoppm`、`pdffonts`）があると進めやすくなります。見る頁の道具（`tools/viewer/`）には、poppler（`pdfinfo` も）と Python 3 が要ります。
 
 ## 作り方について
 
@@ -226,7 +263,7 @@ StateToolsLab が AI の支援を受けて作りました。縦組の復刻本�
 
 ## 状態と検証
 
-0.3.1 は初期の下書きです。試した範囲では、具体的な不具合直しはスキルの有無によらず届くことが多く、差はあまり見えませんでした。無料の DesignCraft でも、Claude は PDF まで届きました。短い依頼だけでは、判型、字詰め、頁の切れ目は回ごとに変わりました。組む前の聞き取りは新しい機能です。条件ごとに 1 回、答えの紙を使って試しただけで、紙は私たちが書いたのでこのスキルに有利です。作者も 3 回試しました。1 回目は13 問は多く、残りが分からなかったので、0.3.1 で残りを見せ、いつでも止められるようにしました。ChatGPT のデスクトップで試した 3 回目では、質問のたびに「あと何問」が出て、仕様もファイルに残りました。ほかの利用者では試していません。本を前提に書いており、雑誌、新聞、会報では試していません。詳しくは[レポート](evaluation/report.md)にあります。
+初期の下書きです。0.3.2〜0.3.6 は、同じ本の組み直しを続けて足したものです。人が版ごとに見る頁で 1 頁ずつ確かめ、約物の決まりと詰めの手順は、その頁の上で決めました。ほかの本ではまだ試していません。下の試しは 0.3.1 で行ったものです。試した範囲では、具体的な不具合直しはスキルの有無によらず届くことが多く、差はあまり見えませんでした。無料の DesignCraft でも、Claude は PDF まで届きました。短い依頼だけでは、判型、字詰め、頁の切れ目は回ごとに変わりました。組む前の聞き取りは新しい機能です。条件ごとに 1 回、答えの紙を使って試しただけで、紙は私たちが書いたのでこのスキルに有利です。作者も 3 回試しました。1 回目は13 問は多く、残りが分からなかったので、0.3.1 で残りを見せ、いつでも止められるようにしました。ChatGPT のデスクトップで試した 3 回目では、質問のたびに「あと何問」が出て、仕様もファイルに残りました。ほかの利用者では試していません。本を前提に書いており、雑誌、新聞、会報では試していません。詳しくは[レポート](evaluation/report.md)にあります。
 
 このスキルは A5 縦組の本 1 冊から作り、実際の相談 2 件で試しました。そのうち 1 件はスキルなしでも試し、スキルなしでも答えはよいものでした。スキルで増えたのは別の案（行を広げて短い行を解く案）で、今のところの主な価値は、手順が毎回そろうことと、技が文書に残ることです。日本語の読めない人を想定した英語の相談も、サンプルの頁で 1 件試しました。原因を見つけ、計算を英語で示し、確かめていない所も書きました。ただ、予想した行の切れ目は、実際に組んだ切れ目とは違いました。本 1 冊を通して使った実績はまだありません。横組は短い試しの文章だけで、リフロー型の EPUB は試していません。
 
