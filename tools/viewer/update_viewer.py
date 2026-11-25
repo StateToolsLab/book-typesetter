@@ -6,6 +6,7 @@
   軽い PDF の置き場所は既定で 版.pdf の隣（名前の後ろに _スマホ用）。
 - 文字の層から、頁ごと・行ごとの字数を数える（縦組。pdftotext -bbox）。
 - viewer_template.html に、版面の値・頁・字数・題を入れて 出力フォルダ/viewer.html を書く。
+  頁は 1 頁ずつ縦に並び、「見開きで見る」で偶数頁とその次の頁を並べる（綴じの向きは 版面.json の 綴じ）。
 - 出力フォルダ/counts.json（字数）と files.json（Artifact などで頁と一緒に出す画像の一覧）も書く。
 版面の値は本ごとの 版面.json から読む（形は references/review-guides.md）。いまは縦組だけ。
 要るもの: poppler（pdftoppm、pdftotext、pdfinfo）
@@ -37,6 +38,9 @@ def load_grid(path):
     lines = g.get('線', {})
     c['everyLine'] = int(lines.get('行ごと', 5))
     c['everyChar'] = int(lines.get('字ごと', 5))
+    c['binding'] = g.get('綴じ', '右')  # 見開きの並べ方。右開き（縦組）は偶数頁が右、左開きは偶数頁が左
+    if c['binding'] not in ('右', '左'):
+        sys.exit('版面.json の 綴じ は「右」か「左」')
     return c
 
 
@@ -81,11 +85,11 @@ def main():
     for i in range(n):
         no = c['first'] + i
         labels.append(c['labels'].get(str(i + 1), f'{no} 頁'))
-    note = a.note or f'{n} 頁（{labels[0]}〜{labels[-1]}）。上から順に頁が並びます。指で広げると拡大できます。'
+    note = a.note or f'{n} 頁（{labels[0]}〜{labels[-1]}）。上から順に頁が並びます。「見開きで見る」で 2 頁ずつ並べられます。指で広げると拡大できます。'
     cfg = {'W': W, 'H': H, 'X1': c['X1'], 'LEAD': c['LEAD'], 'FS': c['FS'], 'TOP': c['TOP'],
            'NL': c['NL'], 'NC': c['NC'], 'everyLine': c['everyLine'], 'everyChar': c['everyChar'],
-           'title': a.title, 'note': note, 'counts': counts,
-           'pages': [{'img': im, 'label': lb} for im, lb in zip(imgs, labels)]}
+           'title': a.title, 'note': note, 'counts': counts, 'binding': c['binding'],
+           'pages': [{'img': im, 'label': lb, 'no': c['first'] + i} for i, (im, lb) in enumerate(zip(imgs, labels))]}
 
     s = open(os.path.join(here, 'viewer_template.html'), encoding='utf-8').read()
     s = s.replace('/*TITLE*/', html.escape(a.title))

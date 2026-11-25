@@ -17,17 +17,23 @@ figure { margin:0; display:grid; gap:4px }
 .pg svg { position:absolute; inset:0; width:100%; height:100%; pointer-events:none }
 body.noguide .pg svg { display:none }
 figcaption { font:12px system-ui,sans-serif; color:var(--sub); text-align:right; font-variant-numeric:tabular-nums }
+/* 見開き: 2 頁を並べる。広い画面では幅を広げる */
+body.spread main { max-width:1180px }
+.sp { display:grid; grid-template-columns:1fr 1fr; gap:2px }
+.sp .blank { border:1px dashed var(--line); box-sizing:border-box }
+.sp figure:first-child figcaption { text-align:left }
 </style>
 <main id="m">
 <header><h1 id="h"></h1>
 <p id="note"></p>
 <p><span class="key" style="color:var(--red)"></span>赤い縦線: 右から <span class="el"></span> 行ごと（上の数字が行）。<span class="key" style="color:var(--blue)"></span>青い横線: 天から <span class="ec"></span> 字ごと（右の数字が字）。行の上の灰色の小さな数字は、その行の字数（縦中横の数字は 1 字）。場所は「何頁、何〜何行の間、何〜何字あたり」のように言ってください。字間を詰めた段落では、青い線と字が少しずれます。</p>
 <label><input type="checkbox" id="g" checked> ガイド線を出す</label>
+<label style="margin-left:16px"><input type="checkbox" id="s"> 見開きで見る</label>
 </header>
 </main>
 <script>
 // update_viewer.py が版面の値・頁・字数を入れる（本ごとの 版面.json から）
-var CFG={"W": 420.0, "H": 594.96, "X1": 330.9, "LEAD": 18.0, "FS": 10.0, "TOP": 97.64, "NL": 15, "NC": 40, "everyLine": 5, "everyChar": 5, "title": "町の製本所（見本）", "note": "2 頁（1 頁〜2 頁）。上から順に頁が並びます。指で広げると拡大できます。", "counts": [[0, 8, 39, 40, 26, 39, 40, 22, 39, 39, 40, 7, 39, 40, 0], [40, 25, 39, 39, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], "pages": [{"img": "p/p-1.jpg", "label": "1 頁"}, {"img": "p/p-2.jpg", "label": "2 頁"}]};
+var CFG={"W": 420.0, "H": 594.96, "X1": 330.9, "LEAD": 18.0, "FS": 10.0, "TOP": 97.64, "NL": 15, "NC": 40, "everyLine": 5, "everyChar": 5, "title": "町の製本所（見本）", "note": "2 頁（1 頁〜2 頁）。上から順に頁が並びます。「見開きで見る」で 2 頁ずつ並べられます。指で広げると拡大できます。", "counts": [[0, 8, 39, 40, 26, 39, 40, 22, 39, 39, 40, 7, 39, 40, 0], [40, 25, 39, 39, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], "binding": "右", "pages": [{"img": "p/p-1.jpg", "label": "1 頁", "no": 1}, {"img": "p/p-2.jpg", "label": "2 頁", "no": 2}]};
 var W=CFG.W,H=CFG.H,X1=CFG.X1,LEAD=CFG.LEAD,FS=CFG.FS,TOP=CFG.TOP,NL=CFG.NL,NC=CFG.NC;
 document.getElementById('h').textContent=CFG.title;
 document.getElementById('note').textContent=CFG.note;
@@ -47,14 +53,40 @@ function guides(pi){
   return s+'</svg>';
 }
 var m=document.getElementById('m');
-CFG.pages.forEach(function(pg,i){
-  var f=document.createElement('figure'),d=document.createElement('div'),c=document.createElement('figcaption'),im=document.createElement('img');
+function fig(i){
+  var f=document.createElement('figure'),d=document.createElement('div'),c=document.createElement('figcaption');
   d.className='pg';d.style.aspectRatio=W+'/'+H;
+  if(i<0){d.className+=' blank';f.appendChild(d);return f;}  // 見開きの片側に頁が無い所
+  var pg=CFG.pages[i],im=document.createElement('img');
   im.src=pg.img;im.alt=pg.label;im.loading=i<3?'eager':'lazy';
   d.appendChild(im);d.insertAdjacentHTML('beforeend',guides(i));
   c.textContent=pg.label;
-  f.appendChild(d);f.appendChild(c);m.appendChild(f);
-});
+  f.appendChild(d);f.appendChild(c);return f;
+}
+// 見開き: 偶数頁とその次の奇数頁を組にする。右開き（綴じ「右」）は偶数頁を右に、左開きは左に置く
+function spreads(){
+  var out=[],i=0,P=CFG.pages;
+  while(i<P.length){
+    var even=-1,odd=-1;
+    if(P[i].no%2===0){even=i;if(i+1<P.length&&P[i+1].no===P[i].no+1){odd=i+1;i+=2;}else i+=1;}
+    else{odd=i;i+=1;}
+    out.push(CFG.binding==='左'?[even,odd]:[odd,even]);  // 画面の左から右の順
+  }
+  return out;
+}
+function render(spread){
+  Array.prototype.slice.call(m.querySelectorAll('figure,.sp')).forEach(function(e){if(e.parentNode===m)m.removeChild(e);});
+  document.body.classList.toggle('spread',spread);
+  if(!spread){CFG.pages.forEach(function(pg,i){m.appendChild(fig(i));});return;}
+  spreads().forEach(function(pair){
+    var row=document.createElement('div');row.className='sp';
+    row.appendChild(fig(pair[0]));row.appendChild(fig(pair[1]));m.appendChild(row);
+  });
+}
+var sb=document.getElementById('s'),sp=false;
+try{ sp=localStorage.getItem('spread')==='1'; }catch(e){}
+sb.checked=sp;render(sp);
+sb.addEventListener('change',function(){render(sb.checked);try{localStorage.setItem('spread',sb.checked?'1':'0');}catch(e){}});
 var cb=document.getElementById('g');
 try{ if(localStorage.getItem('noguide')==='1'){cb.checked=false;document.body.classList.add('noguide');} }catch(e){}
 cb.addEventListener('change',function(){document.body.classList.toggle('noguide',!cb.checked);try{localStorage.setItem('noguide',cb.checked?'0':'1');}catch(e){}});
